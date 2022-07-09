@@ -4,8 +4,19 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require("dotenv").config()
 
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URL, {
+    useUnifiedTopology: true,
+    //   useFindAndModify: true,
+    //   useCreateIndex: true,
+});
+
+mongoose.connection;
+
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const authRouter = require("./app/usecase/auth/router")
+const userRouter = require("./app/usecase/user/router")
 
 var app = express();
 
@@ -19,8 +30,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const baseURL = '/api/v1'
+app.use(indexRouter);
+app.use(baseURL, authRouter)
+app.use(baseURL, userRouter)
 
 // catch 404 and forward to error handler
 app.use((_, res) => res.sendStatus(404))
