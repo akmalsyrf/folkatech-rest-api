@@ -1,13 +1,27 @@
 const User = require("./model")
 const bcrypt = require("bcryptjs");
+const Redis = require("../../utils/redis")
 
 exports.getAllUser = async (req, res) => {
     try {
-        const users = await User.find().select(['-password', '-accountNumber', '-identityNumber', '-createdAt', '-updatedAt'])
-        res.status(200).json({
-            status: "success",
-            data: { users }
-        })
+        const value = await Redis.get("getAllUsers")
+        let users
+        if (value) {
+            console.log("get data from redis")
+            users = JSON.parse(value)
+            res.status(200).json({
+                status: "success",
+                data: { users }
+            })
+        } else {
+            console.log("get data from db")
+            users = await User.find().select(['-password', '-accountNumber', '-identityNumber', '-createdAt', '-updatedAt'])
+            Redis.set("getAllUsers", JSON.stringify(users))
+            res.status(200).json({
+                status: "success",
+                data: { users }
+            })
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({

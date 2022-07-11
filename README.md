@@ -7,4 +7,5 @@
 - `docker build -t folkatech-rest-api:0.0.1 .`
 - `docker network create folkatech-rest-api-network`
 - `docker run -p 27017:27017 --network folkatech-rest-api-network -d --name mongo -t mongo:latest`
+- `docker run -p 6379:6379 --network folkatech-rest-api-network -d --name redis1 --hostname=redis1 -t redis:latest`
 - `docker run -p 3000:3000 --network folkatech-rest-api-network -d folkatech-rest-api:0.0.1`

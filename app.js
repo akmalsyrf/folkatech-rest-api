@@ -14,10 +14,6 @@ mongoose.connect(process.env.MONGO_URL, {
 
 mongoose.connection;
 
-var indexRouter = require('./routes/index');
-const authRouter = require("./app/usecase/auth/router")
-const userRouter = require("./app/usecase/user/router")
-
 var app = express();
 
 // view engine setup
@@ -29,6 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var indexRouter = require('./routes/index');
+const authRouter = require("./app/usecase/auth/router")
+const userRouter = require("./app/usecase/user/router")
 
 const baseURL = '/api/v1'
 app.use(indexRouter);
